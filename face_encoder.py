@@ -1,6 +1,7 @@
 import cv2
 import face_recognition
 import os 
+import pickle 
 
 def load_images_from_folder (folder_path):
     images = []
@@ -11,7 +12,7 @@ def load_images_from_folder (folder_path):
         img = cv2.imread(full_path)
         if img is not None:
             images.append(img)
-            names.append(os.path.splittext(file_name)[0])
+            names.append(os.path.splitext(file_name)[0])
     
     return images, names
 
@@ -25,3 +26,13 @@ def encode_faces(images):
         #[0] - assumes each image has exactly one face
         encoded.append(enc)
     return encoded
+
+if __name__ == "__main__":
+    folder = "images"
+    imgs, names = load_images_from_folder(folder)
+    encodings = encode_faces(imgs)
+
+    with open("encoding.pkl", "wb") as f:
+        pickle.dump((encodings, names), f)
+
+    print("Encodings saved to encodings.pkl")
